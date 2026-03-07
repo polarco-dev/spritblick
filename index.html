@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="author" content="Michael Weißgerber">
+  <title>Spritblick | Tankstellen suchen & Favoriten</title>
+  <meta
+    name="description"
+    content="Spritblick: Tankstellen in Deutschland suchen, Preise vergleichen und Favoriten speichern."
+  >
+  <meta name="theme-color" content="#c51f2d">
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand-link" href="#" aria-label="Spritblick Startseite">
+        <img class="app-brand-logo" src="assets/img/app-logo.png" alt="Spritblick Logo" width="64" height="64">
+        <span class="brand-copy">
+          <strong>Spritblick</strong>
+          <span>Preise checken, günstig tanken.</span>
+        </span>
+      </a>
+      <div class="panel-actions">
+        <button
+          id="themeToggle"
+          class="theme-toggle"
+          type="button"
+          aria-pressed="false"
+          aria-label="Zum Dark-Modus wechseln"
+        >
+          <span id="themeToggleIcon" class="theme-toggle-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <circle cx="12" cy="12" r="3.5"></circle>
+              <path d="M12 2.5V5"></path>
+              <path d="M12 19V21.5"></path>
+              <path d="M4.9 4.9L6.7 6.7"></path>
+              <path d="M17.3 17.3L19.1 19.1"></path>
+              <path d="M2.5 12H5"></path>
+              <path d="M19 12H21.5"></path>
+              <path d="M4.9 19.1L6.7 17.3"></path>
+              <path d="M17.3 6.7L19.1 4.9"></path>
+            </svg>
+          </span>
+        </button>
+        <button
+          id="favoritesToggle"
+          class="favorites-toggle"
+          type="button"
+          aria-controls="favoritesDrawer"
+          aria-expanded="false"
+          aria-label="Favoriten öffnen"
+        >
+          <span class="favorites-toggle-label">Favoriten</span>
+          <span id="favoritesToggleCount" class="favorites-toggle-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="search-panel" aria-label="Tankstellensuche">
+      <div class="search-head">
+        <h1>Die besten Spritpreise in deiner Nähe</h1>
+        <p class="section-subtitle search-kicker">Tankstellen im Preischeck</p>
+      </div>
+      <form id="searchForm" class="search-form">
+        <label class="field-group field-wide" for="searchQuery">
+          <span class="field-label">Ort / Adresse / PLZ</span>
+          <input
+            id="searchQuery"
+            name="q"
+            type="text"
+            autocomplete="off"
+            placeholder="Bitte Ort, Straße oder Postleitzahl eingeben."
+            required
+          >
+        </label>
+
+        <label class="field-group" for="radiusSelect">
+          <span class="field-label">Radius</span>
+          <select id="radiusSelect" name="radius">
+            <option value="5" selected>5 km</option>
+            <option value="10">10 km</option>
+            <option value="15">15 km</option>
+            <option value="20">20 km</option>
+          </select>
+        </label>
+
+        <label class="field-group" for="fuelSelect">
+          <span class="field-label">Kraftstoff</span>
+          <select id="fuelSelect" name="fuel">
+            <option value="e5" selected>Super E5</option>
+            <option value="e10">Super E10</option>
+            <option value="diesel">Diesel</option>
+          </select>
+        </label>
+
+        <div class="search-actions">
+          <button id="searchButton" class="button-solid" type="submit">Suchen</button>
+          <button id="nearbyButton" class="button-ghost" type="button">In meiner Nähe</button>
+        </div>
+      </form>
+      <p id="searchMeta" class="section-meta" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="content-grid">
+      <section class="data-section results-section" aria-label="Suchergebnisse">
+        <div class="section-head">
+          <div class="section-title-group">
+            <h2>Suchergebnisse</h2>
+            <p class="panel-subtitle">Sortierbar nach Preis, Entfernung oder Name.</p>
+          </div>
+          <div class="results-controls">
+            <label class="sort-control" for="searchSort">
+              <span class="sort-label">Sortierung</span>
+              <select id="searchSort" name="sort">
+                <option value="price" selected>Günstigster Preis</option>
+                <option value="distance">Entfernung</option>
+                <option value="name">Name A-Z</option>
+              </select>
+            </label>
+            <p id="searchCount" class="count-label">0 Treffer</p>
+          </div>
+        </div>
+        <div id="searchResults" class="station-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="favoritesOverlay" class="favorites-overlay" hidden></div>
+  <aside id="favoritesDrawer" class="favorites-drawer" aria-label="Favoriten" aria-hidden="true">
+    <div class="favorites-drawer-head">
+      <div class="section-title-group">
+        <h2>Favoriten</h2>
+        <p class="panel-subtitle">Gespeicherte Stationen auf einen Blick.</p>
+      </div>
+      <button id="favoritesClose" class="favorites-close" type="button" aria-label="Favoriten schließen">
+        Schließen
+      </button>
+    </div>
+    <div class="favorites-drawer-meta">
+      <p id="favoritesCount" class="count-label">0 Favoriten</p>
+      <p id="favoritesMeta" class="section-meta" role="status" aria-live="polite"></p>
+    </div>
+    <div id="favoritesGrid" class="station-grid favorites-grid"></div>
+  </aside>
+
+  <footer class="site-footer" aria-label="Projektinformationen">
+    <p>Ein Projekt von <a href="https://polarco.de">polarco.de</a> · v2.0.0</p>
+    <p>Preisdaten: Tankerkönig / MTS-K · <a href="https://creativecommons.tankerkoenig.de/" rel="noopener noreferrer">CC BY 4.0</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
